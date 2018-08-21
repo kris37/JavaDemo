@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.divide;
 
 /**
  * Created by panqiang on 2017/3/22.

@@ -1,4 +1,4 @@
-package datastructure;
+package datastructure.tree;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;

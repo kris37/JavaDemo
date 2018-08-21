@@ -8,6 +8,7 @@ package algorithm.sort;
  * \* To change this template use File | Settings | File Templates.
  * \* Description:
  * \
+ * 插入排序
  */
 public class InsertSort {
     public static void main(String [] args){

@@ -1,4 +1,4 @@
-package algorithm;
+package datastructure.list;
 
 /**
  * Created by panqiang on 2017/3/21.
@@ -29,7 +29,7 @@ public class LinkList_Reverse {
             tmp = new Node(cur, i);
             cur = tmp;
         }
-       // algorithm.Node res=list_Reverse_NoRecursive(cur);
+       // datastructure.list.Node res=list_Reverse_NoRecursive(cur);
         Node res=cur;
         while(null!=res){
             System.out.println(res.getData());
