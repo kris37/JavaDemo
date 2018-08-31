@@ -1,12 +1,9 @@
-package jvm.io;
+package jvm.io.tcpServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -29,7 +26,7 @@ public class TestHandler implements Handler{
         ByteBuffer readBuffer = con.getReadBuffer();
         readBuffer.flip();
         String s = new String(Arrays.copyOf(readBuffer.array(),con.getTotal()), Charset.forName("utf-8"));
-        System.out.println(Thread.currentThread().getName()+"\t"+con.getId()+"\t recive "+s);
+        LOGGER.info(Thread.currentThread().getName()+"\t"+con.getId()+"\t recive "+s);
         //todo
 //        try {
 //            con.setSendBuffer(ByteBuffer.wrap("hello".concat(s).getBytes("utf-8")));

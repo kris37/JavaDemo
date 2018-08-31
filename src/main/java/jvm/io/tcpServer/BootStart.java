@@ -1,4 +1,4 @@
-package jvm.io;
+package jvm.io.tcpServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +24,11 @@ public class BootStart {
          NioReactor[] pool = new NioReactor[3];
         for (int i = 0; i <threads ; i++) {
             pool[i] = new NioReactor();
-            System.out.println("NioReactor :" +i+" start...");
+            LOGGER.info("NioReactor :" +i+" start...");
             new Thread(pool[i]).start();
         }
         Acceptor acceptor = new Acceptor(3337,"test echo",pool);
-        System.out.println("acceptor : start...");
+        LOGGER.info("acceptor : start...");
         acceptor.start();
 
     }

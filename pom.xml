@@ -54,9 +54,12 @@
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
           <version>1.2.3</version>
-          <scope>test</scope>
       </dependency>
-
+      <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-core</artifactId>
+          <version>1.2.3</version>
+      </dependency>
 
   </dependencies>
 
@@ -89,4 +92,65 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <build>
+    <resources>
+        <resource>
+            <directory>${project.basedir}/src/main/resources</directory>
+        </resource>
+        <resource>
+            <!-- Include the properties file to provide the build information. -->
+            <directory>${project.build.directory}/extra-resources</directory>
+            <filtering>true</filtering>
+        </resource>
+    </resources>
+        <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <!-- When using SPARK_PREPEND_CLASSES Spark classes compiled locally don't use
+                     shaded deps. So here we store jars in their original form which are added
+                     when the classpath is computed. -->
+                <!-- See similar execution in mllib/pom.xml -->
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                        <overWriteReleases>false</overWriteReleases>
+                        <overWriteSnapshots>false</overWriteSnapshots>
+                        <overWriteIfNewer>true</overWriteIfNewer>
+                        <useSubDirectoryPerType>true</useSubDirectoryPerType>
+                        <!--<includeArtifactIds>-->
+                        <!--guava,jetty-io,jetty-servlet,jetty-servlets,jetty-continuation,jetty-http,jetty-plus,jetty-util,jetty-server,jetty-security,jetty-proxy,jetty-client-->
+                        <!--</includeArtifactIds>-->
+                        <silent>true</silent>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        </plugins>
+
+    </build>
 </project>
