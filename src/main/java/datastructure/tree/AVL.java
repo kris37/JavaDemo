@@ -1,5 +1,6 @@
 package datastructure.tree;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Created with IntelliJ IDEA.
  *
  * @author panqiang37@gmail.com
- * @version kris37
+ * @version JDK8
  * Date: 2018/8/30 下午5:53
  * To change this template use File | Settings | File Templates.
  * Description:
@@ -17,8 +18,9 @@ import java.util.Objects;
  *
  * <br>
  */
-public class AVL<K extends Comparable,V> {
+public class AVL<K extends Comparable,V> implements Serializable{
 
+    private static final long serialVersionUID = 5798314292958514133L;
     private Node root;
     public  class Node{
         private K key;
@@ -71,14 +73,17 @@ public class AVL<K extends Comparable,V> {
         if(Objects.isNull(node)){
             return null;
         }
-        int cmp = key.compareTo(node.key);
-        if(cmp > 0 ){
-            return getValue(node.right,key);
-        }else if(cmp < 0){
-            return getValue(node.left,key);
-        }else{
-            return node;
+        while(!Objects.isNull(node)){
+            int cmp = key.compareTo(node.key);
+            if(cmp > 0 ){
+                node = node.right;
+            }else if (cmp < 0 ){
+                node = node.left;
+            }else {
+                return node;
+            }
         }
+        return null;
     }
 
     /**

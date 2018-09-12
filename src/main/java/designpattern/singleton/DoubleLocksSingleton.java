@@ -3,7 +3,7 @@ package designpattern.singleton;
  * @author panqiang 2017/12/07
  *  </p>
  *  双重锁单例模式 懒汉式
- *  nitice  1. 注意 <b> @volatile 关键字的在此处的对 jvm 和cup 指令重排</b> 的限制
+ *  nitice  1. 注意 <b> @volatile 关键字的在此处的对 jvm 和cup 指令重排</b> 的限制 happen-before
  *          2.
  */
 
@@ -13,7 +13,7 @@ public class DoubleLocksSingleton {
 
     }
 
-    private static volatile  DoubleLocksSingleton singleton = null;
+    private static volatile DoubleLocksSingleton singleton = null;
 
     // 饿汉式
 

@@ -9,6 +9,7 @@ package jvm.concurrent;
  * To change this template use File | Settings | File Templates.
  * Description:
  * <p>
+ *     信号量逻辑实现
  * <br>
  */
 public class MySemaphore {
