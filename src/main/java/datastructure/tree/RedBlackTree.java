@@ -11,6 +11,7 @@ import java.util.Objects;
  *
  *  <p
  *      简单实现红黑树
+ *      比较好的讲解 <https://www.bilibili.com/video/av23890827/?p=13>
  *  </p>
  *
  */
@@ -50,17 +51,17 @@ public class RedBlackTree<K extends Comparable,V> {
         if(Objects.isNull(node)) return false;
         return node.color == RED;
     }
-    // serach 查找
-    public Node serach(K key){
+    // search 查找
+    public Node search(K key){
         if(Objects.isNull(key)) {
             throw new IllegalArgumentException("key is null !");
         }
 
-        return serach(root,key);
+        return search(root,key);
 
     }
 
-    private Node serach(Node node,K key){
+    private Node search(Node node, K key){
         while(!Objects.isNull(node)){
             int cmp = key.compareTo(node.key);
             if(cmp > 0 ){
@@ -256,7 +257,7 @@ public class RedBlackTree<K extends Comparable,V> {
      */
     public void delete(K key){
         if (key == null) throw new IllegalArgumentException(" delete key is null !");
-        Node serach = serach(root, key);
+        Node serach = search(root, key);
         if(serach== null){
             return;
         }
