@@ -246,9 +246,24 @@ public class AVL<K extends Comparable,V> {
         return list;
     }
 
+    /**
+     * AVL tree's height ,begin from 0; if null height = -1;
+     * @return
+     */
+    public int height(){
+        return height(root);
+    }
+    /**
+     * AVL 树的节点数
+     * @return
+     */
+    public int size(){
+        return size(root);
+    }
 
 
     public static void main(String []args){
+
         List<Integer> list = Arrays.asList(3,4,2,1,4,6,3,6,8,4,6,7,2,4,310,23,35,2,34);
         AVL<Integer, Integer> avl = new AVL<>();
         list.forEach(each -> {
@@ -258,7 +273,7 @@ public class AVL<K extends Comparable,V> {
                     ) {
                 System.out.print(node + " -> ");
             }
-            System.out.println("");
+            System.out.println(" height: "+ avl.height() + " size: "+ avl.size());
         });
 
         list.forEach(each -> {
@@ -268,8 +283,9 @@ public class AVL<K extends Comparable,V> {
                     ) {
                 System.out.print(node + " -> ");
             }
-            System.out.println("-");
+            System.out.println(" height: "+ avl.height() + " size: "+ avl.size());
         });
+
 
 
     }
