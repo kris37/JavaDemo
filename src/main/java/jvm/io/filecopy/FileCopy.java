@@ -22,10 +22,12 @@ public class FileCopy {
         try(FileChannel input = new FileInputStream(source).getChannel();
             FileChannel out = new FileOutputStream(dest).getChannel();
         ){
-            for (long size = input.size();size >0;){
-                long transfered = input.transferTo(input.position(), size, out);
-                input.position(input.position() + transfered);
-                size -= transfered;
+            long size = input.size();
+
+            while (size > 0 ){
+                long transfer = input.transferTo(input.position(), size, out);
+                input.position(input.position() + transfer);
+                size -= transfer;
             }
         }
     }
