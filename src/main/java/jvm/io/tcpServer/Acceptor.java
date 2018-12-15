@@ -109,7 +109,7 @@ public class Acceptor extends Thread {
             } catch (IOException e) {
                 LOGGER.warn(getName(), e);
             } finally {
-                selectionKeys.clear();
+               // selectionKeys.clear();
             }
         }
 

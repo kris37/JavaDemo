@@ -25,7 +25,7 @@ public class DemoFileChannel {
         //Path path = Paths.get("/Users/panqiang/Desktop/20180815_log.1534295631344");
         //FileChannel fileChannel = FileChannel.open(path, StandardOpenOption.READ);
 
-        RandomAccessFile files = new RandomAccessFile("/Users/panqiang/Desktop/20180815_log.1534295631344","rw");
+        RandomAccessFile files = new RandomAccessFile("","rw");
         FileChannel channel = files.getChannel();
         ByteBuffer bbuf = ByteBuffer.allocate(64);
         while ( channel.read(bbuf) != -1){

@@ -220,11 +220,11 @@ public class Graph<K extends Comparable> {
         graph.addDirectEdge("e","h");
         graph.addDirectEdge("c","g");
         graph.addDirectEdge("g","f");
-        graph.addDirectEdge("f","c");
+        //graph.addDirectEdge("f","c");
 
         //System.out.println(graph.isDAGByDegree());
-        graph.printDFS("a");
-        //System.out.println(graph.isDAGByDFS());
+        //graph.printDFS("a");
+        System.out.println(graph.isDAGByDFS());
 
 
     }

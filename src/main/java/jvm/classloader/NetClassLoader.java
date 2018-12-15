@@ -70,7 +70,20 @@ public final class NetClassLoader extends ClassLoader {
 
         int len = -1;
         byte[] buff = new byte[1024<<4];
-        while ((len = isr.read(buff)) !=-1){
+        /**
+         * Reads the next byte of data from the input stream. The value byte is
+         * returned as an <code>int</code> in the range <code>0</code> to
+         * <code>255</code>. If no byte is available because the end of the stream
+         * has been reached, the value <code>-1</code> is returned. This method
+         * blocks until input data is available, the end of the stream is detected,
+         * or an exception is thrown.
+         *  isr.read() 每次读取一个byte 转化为 int (0,255) 如果结束返回 -1
+         *     while ((len = isr.read()) !=-1){
+         byteArrayBuffer.write(len);
+         }
+         */
+
+        while ((len = isr.read(buff)) != -1){
             byteArrayBuffer.write(buff,0,len);
         }
         return byteArrayBuffer.toByteArray();

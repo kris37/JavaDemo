@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.sun.tools.javac.util.List;
 import sun.jvm.hotspot.utilities.Assert;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
  *  </p>
  *
  */
-public class IntervalRBTree< T extends Comparable> {
+public class IntervalRBTree< T extends Comparable,V extends Comparable> {
     public static final boolean RED = true ;
     public static final boolean BLACK = false ;
     private Node root;
@@ -28,17 +27,19 @@ public class IntervalRBTree< T extends Comparable> {
 
     /**
      *  interval field obj
-     * @param <T>
+     * @param <T,V>
      */
-    public static class Interval<T extends Comparable> implements Comparable{
+    public static class Interval<T extends Comparable,V extends Comparable> implements Comparable{
         private T low;
         private T high;
-        public Interval(T low, T high){
+        private V value;
+        public Interval(T low, T high,V value){
             if(low.compareTo(high) > 0){
                 throw new IllegalArgumentException(" interval build low > high !");
             }
             this.low = low;
             this.high = high;
+            this.value = value;
         }
 
         public T getLow() {
@@ -49,16 +50,19 @@ public class IntervalRBTree< T extends Comparable> {
             return high;
         }
 
+        public V getValue() {
+            return value;
+        }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Interval<?> intrval = (Interval<?>) o;
+            Interval<?,?> intrval = (Interval<?,?>) o;
 
             if (!low.equals(intrval.low)) return false;
-            return high.equals(intrval.high);
+            return high.equals(intrval.high) && value.equals(intrval.value);
         }
 
         @Override
@@ -68,14 +72,16 @@ public class IntervalRBTree< T extends Comparable> {
             return result;
         }
 
-        public static <T extends Comparable> Interval build(T low, T high){
-            return new Interval<T>(low,high);
+        public static <T extends Comparable,V extends Comparable> Interval build(T low, T high,V value){
+            return new Interval<T,V>(low,high,value);
         }
 
         @Override
         public int compareTo(Object o) {
                int cmp =  this.low .compareTo(((Interval) o).low);
-               return cmp == 0? this.high.compareTo(((Interval) o).high) : cmp;
+               cmp = (cmp == 0)? this.high.compareTo(((Interval) o).high) : cmp;
+               return cmp ==0 ? this.value.compareTo(((Interval) o).value):cmp;
+
         }
 
         @Override
@@ -83,6 +89,7 @@ public class IntervalRBTree< T extends Comparable> {
             return MoreObjects.toStringHelper(this)
                     .add("low", low)
                     .add("high", high)
+                    .add("value", value)
                     .toString();
         }
     }
@@ -92,14 +99,14 @@ public class IntervalRBTree< T extends Comparable> {
      */
     private class Node {
 
-        private Interval<T> key ;
+        private Interval<T,V> key ;
         private T max;
         private boolean color = RED ;
         private Node left;
         private Node right;
         private Node parent;
         private int size = 1;
-        public Node(Interval<T> key, boolean color){
+        public Node(Interval<T,V> key, boolean color){
             this.key = key ;
             this.color = color;
             this.max = key.getHigh();
@@ -123,7 +130,7 @@ public class IntervalRBTree< T extends Comparable> {
         return node.color == RED;
     }
     // search 查找
-    public Node search(Interval<T> key){
+    public Node search(Interval<T,V> key){
         if(Objects.isNull(key)) {
             throw new IllegalArgumentException("key is null !");
         }
@@ -132,7 +139,7 @@ public class IntervalRBTree< T extends Comparable> {
 
     }
 
-    private Node search(Node node, Interval<T> key){
+    private Node search(Node node, Interval<T,V> key){
         while(!Objects.isNull(node)){
             int cmp = key.compareTo(node.key);
             if(cmp > 0 ){
@@ -154,7 +161,7 @@ public class IntervalRBTree< T extends Comparable> {
      * @param key
      * @return
      */
-    public void insert(Interval<T> key) {
+    public void insert(Interval<T,V> key) {
         if(Objects.isNull(key)){
             throw new IllegalArgumentException("key is null !");
         }
@@ -350,7 +357,7 @@ public class IntervalRBTree< T extends Comparable> {
      *
      * @param key
      */
-    public void delete(Interval<T> key){
+    public void delete(Interval<T,V> key){
         // todo reSize
         if (key == null) throw new IllegalArgumentException(" delete key is null !");
         Node serach = search(root, key);
@@ -532,13 +539,13 @@ public class IntervalRBTree< T extends Comparable> {
         }
     }
 
-    public int rank(Interval<T> key){
+    public int rank(Interval<T,V> key){
         if(Objects.isNull(key)){
             throw new IllegalArgumentException(" rank key is null !");
         }
         return rank(root,key);
     }
-    private int rank(Node node, Interval<T> key){
+    private int rank(Node node, Interval<T,V> key){
         int cmp = 0;
         int rank = 0;
         while (node != null){
@@ -593,7 +600,7 @@ public class IntervalRBTree< T extends Comparable> {
      * @param key
      * @return
      */
-    public Interval intervalSearch(Interval<T> key){
+    public Interval<T,V> intervalSearch(Interval<T,V> key){
         Node x = root;
         while (x != null && !overlap(key,x.key)){
             if(x.left!=null && max(x.left).compareTo(key.getLow()) >= 0){
@@ -611,9 +618,21 @@ public class IntervalRBTree< T extends Comparable> {
      * @param key
      * @return
      */
-    public List<Interval> intervalSearchAll(Interval<T> key){
-        //todo
+    public List<Interval<T,V>> intervalSearchAll(Interval<T,V> key){
+        searchAll(root,key);
         return null;
+    }
+    private void searchAll(Node node,Interval<T,V> key){
+        if(node !=null && overlap(key,node.key)){
+            System.out.println(node.key);
+        }
+        if(leftOf(node)!=null && leftOf(node).max.compareTo(key.low) >= 0){
+            searchAll(leftOf(node),key);
+        }
+        if(rightOf(node)!=null && rightOf(node).max.compareTo(key.low) >=0){
+            searchAll(rightOf(node),key);
+        }
+
     }
 
     /**
@@ -622,7 +641,7 @@ public class IntervalRBTree< T extends Comparable> {
      * @param n
      * @return
      */
-    private boolean overlap(Interval<T> m,Interval<T> n){
+    private boolean overlap(Interval<T,V> m,Interval<T,V> n){
 
         return !(m.getHigh().compareTo(n.getLow()) < 0 ||
                 m.getLow().compareTo(n.getHigh()) > 0 );
@@ -632,12 +651,12 @@ public class IntervalRBTree< T extends Comparable> {
     public static void main(String []args){
 
         ArrayList<Integer> integers = Lists.newArrayList( 10,11,12,13,14,15,16, 2, 3, 4, 5, 6, 7, 8, 9);//17,18,19,20,1,
-        IntervalRBTree<Integer> tree = new IntervalRBTree<Integer>();
+        IntervalRBTree<Integer,Integer> tree = new IntervalRBTree<Integer,Integer>();
         for (Integer integer : integers) {
-            Interval<Integer> integerInterval = new Interval<>(integer, integer + 5);
+            Interval<Integer,Integer> integerInterval = new Interval<>(integer, integer+8,integer);
             tree.insert(integerInterval);
         }
-        Interval node = tree.intervalSearch(new Interval<Integer>(18, 20));
+        List<Interval<Integer, Integer>> intervals = tree.intervalSearchAll(new Interval<Integer, Integer>(18, 20, null));
 
 
     }

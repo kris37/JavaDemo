@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.spi.SelectorProvider;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -49,6 +50,7 @@ public class NioReactor implements Runnable{
          *  如果超过 keepAliveTime 还没有新的任务，则释放大于 corePoolSize 部分的线程
          */
       //  fixThreads = thread;
+
         this.selector = Selector.open();
         this.taskQueue = new ArrayBlockingQueue(size);
         this.handler = hadler;

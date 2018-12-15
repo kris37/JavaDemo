@@ -155,4 +155,57 @@ public class LinkedList_24_25_141_206 {
 
 
     }
+
+
+    // todo kgroup reverse
+
+    public static ListNode reverseGroupK(ListNode first,int k){
+
+        ListNode dummy = new ListNode(Integer.MAX_VALUE);
+        dummy.next = first;
+        ListNode groupHead = first;
+        ListNode preTail = dummy;
+        ListNode cur = first;
+        int count = 0;
+        do {
+            count ++;
+            if(count == k){
+                count = 0;
+                ListNode nexthead  = cur.next;
+                cur = groupHead;
+                // ready reverse k field link
+                preTail.next  = kreverse(groupHead, k);
+                // update link pre and current
+                preTail = cur;
+                cur.next = nexthead;
+                groupHead = nexthead;
+            }
+            cur = cur.next;
+        }while (cur != null);
+        return dummy.next;
+    }
+
+    /**
+     *
+     * @param head
+     * @param k
+     * @return return new head
+     */
+    public static ListNode kreverse(ListNode head,int k){
+        ListNode cur = head;
+        ListNode pre = null;
+
+        while (k >0){
+            k--;
+           ListNode tmp = cur.next;
+           cur.next = pre;
+           pre = cur;
+           cur = tmp;
+
+        }
+        return pre;
+
+    }
+
+
 }
